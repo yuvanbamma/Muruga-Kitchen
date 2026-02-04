@@ -1,5 +1,6 @@
 package com.ammaPaasam.unavagam.service.impl;
 
+import com.ammaPaasam.unavagam.commonservice.CloudinaryService;
 import com.ammaPaasam.unavagam.dto.FoodPostRequest;
 import com.ammaPaasam.unavagam.dto.FoodPostResponse;
 import com.ammaPaasam.unavagam.dto.PageResponse;
@@ -30,6 +31,8 @@ public class FoodPostServiceImpl implements FoodPostService {
     private final FoodPostRepository foodPostRepository;
 
     private static final String upload_dir = "uploads";
+
+    private final CloudinaryService cloudinaryService;
 
     @Override
     public FoodPostResponse createFoodPost(FoodPostRequest foodPostRequest, MultipartFile image) throws Exception {
@@ -77,6 +80,51 @@ public class FoodPostServiceImpl implements FoodPostService {
         return mapFullResponse(foodPost);
     }
 
+    @Override
+    public FoodPostResponse editFoodPost(FoodPostRequest foodPostRequest) throws Exception {
+
+        if (foodPostRequest.getId() == null) {
+            throw new Exception("Id cannot be empty while updating.");
+        }
+        Optional<FoodPost> foodPost = foodPostRepository.findById(foodPostRequest.getId());
+        if (foodPost.isPresent()) {
+            FoodPost foodPost1 = foodPost.get();
+            if (foodPostRequest.getName() != null) {
+                foodPost1.setName(foodPostRequest.getName());
+            }
+            if (foodPostRequest.getDescription() != null) {
+                foodPost1.setDescription(foodPostRequest.getDescription());
+            }
+            if (foodPostRequest.getQuantity() != null) {
+                foodPost1.setQuantity(foodPostRequest.getQuantity());
+            }
+            FoodPost result = foodPostRepository.save(foodPost1);
+            return mapFullResponse(result);
+
+        }else{
+            throw new Exception("No food post found for that id.");
+        }
+    }
+
+    @Override
+    public void deleteFoodPost(UUID id) throws Exception {
+
+        Optional<FoodPost> foodPost = foodPostRepository.findById(id);
+        if (foodPost.isPresent()) {
+            FoodPost foodPost1 = foodPost.get();
+            String imageUrlKey = foodPost1.getImageUrl();
+            foodPost1.setDeleted(true);
+            foodPost1.setActive(false);
+            foodPost1.setImageUrl(null);
+            foodPostRepository.save(foodPost1);
+            if (imageUrlKey != null) {
+                cloudinaryService.deleteImage(imageUrlKey);
+            }
+        } else {
+            throw new Exception("No food post found for that id.");
+        }
+    }
+
 
     private FoodPostResponse mapToResponse(FoodPost foodPost) {
         FoodPostResponse foodPostResponse = new FoodPostResponse();
@@ -104,14 +152,20 @@ public class FoodPostServiceImpl implements FoodPostService {
         if (image == null || image.isEmpty()) {
             throw new Exception("Image cannot be empty");
         }
-        try {
-            Files.createDirectories(Paths.get(upload_dir));
-            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get(upload_dir, fileName);
-            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            return "/uploads/" + fileName;
-        } catch (Exception e) {
-            throw new Exception("Failed to store image files");
+//        try {
+//            Files.createDirectories(Paths.get(upload_dir));
+//            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+//            Path filePath = Paths.get(upload_dir, fileName);
+//            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//            return "/uploads/" + fileName;
+//        } catch (Exception e) {
+//            throw new Exception("Failed to store image files");
+//        }
+
+        try{
+           return cloudinaryService.uploadImage(image);
+        }catch(Exception e){
+              throw new Exception("Failed during image upload to cloudinary");
         }
     }
 }

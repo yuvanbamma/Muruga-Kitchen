@@ -14,4 +14,8 @@ public interface FoodPostService {
     PageResponse<FoodPostResponse> getAllFoodPost(int page, int size);
 
     FoodPostResponse getFoodPostById(UUID id);
+
+    FoodPostResponse editFoodPost(FoodPostRequest foodPostRequest) throws Exception;
+
+    void deleteFoodPost(UUID id) throws Exception;
 }

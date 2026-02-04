@@ -37,4 +37,14 @@ public class FoodPostController {
     public FoodPostResponse getFoodpostById(@PathVariable UUID id){
         return foodPostService.getFoodPostById(id);
     }
+
+    @PutMapping("/{id}")
+    public FoodPostResponse editFoodPost(@RequestBody FoodPostRequest foodPostRequest) throws Exception {
+        return foodPostService.editFoodPost(foodPostRequest);
+    }
+
+    @DeleteMapping
+    public void deleteFoodPost(UUID id) throws Exception {
+         foodPostService.deleteFoodPost(id);
+    }
 }

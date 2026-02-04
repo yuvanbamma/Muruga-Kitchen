@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.logging.log4j.message.Message;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class FoodPostRequest {
@@ -17,4 +19,6 @@ public class FoodPostRequest {
 
     @NotNull(message = "quantity cannot be empty")
     private Integer quantity;
+
+    private UUID id;
 }
