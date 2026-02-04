@@ -22,7 +22,7 @@ public class FoodPostController {
 
     @PostMapping
     public FoodPostResponse createFoodPost(@RequestPart("data") @Valid FoodPostRequest foodPostRequest,
-                                           @RequestPart("file") MultipartFile image) throws Exception {
+                                           @RequestPart(value = "file", required = false) MultipartFile image) throws Exception {
         return foodPostService.createFoodPost(foodPostRequest,image);
     }
 

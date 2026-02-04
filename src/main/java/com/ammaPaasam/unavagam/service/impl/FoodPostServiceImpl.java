@@ -54,6 +54,7 @@ public class FoodPostServiceImpl implements FoodPostService {
             foodPost.setQuantity(food.getQuantity());
             foodPost.setDescription(food.getDescription());
             foodPost.setImageUrl(food.getImageUrl());
+            foodPost.setId(food.getId());
             content.add(foodPost);
         }
 
