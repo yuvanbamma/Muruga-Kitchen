@@ -6,6 +6,7 @@ import com.ammaPaasam.unavagam.dto.PageResponse;
 import com.ammaPaasam.unavagam.service.FoodPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,13 +21,14 @@ public class FoodPostController {
 
     private final FoodPostService foodPostService;
 
+    @PreAuthorize("hasRole('FOOD_DONATOR')")
     @PostMapping
     public FoodPostResponse createFoodPost(@RequestPart("data") @Valid FoodPostRequest foodPostRequest,
                                            @RequestPart(value = "file", required = false) MultipartFile image) throws Exception {
         return foodPostService.createFoodPost(foodPostRequest,image);
     }
 
-    @GetMapping
+    @PostMapping("/getFoodPostList")
     public PageResponse<FoodPostResponse> getAllFoodResponse(@RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "10") int size){
         return foodPostService.getAllFoodPost(page,size);

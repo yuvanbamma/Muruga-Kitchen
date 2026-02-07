@@ -5,6 +5,7 @@ import com.ammaPaasam.unavagam.dto.FoodPostRequest;
 import com.ammaPaasam.unavagam.dto.FoodPostResponse;
 import com.ammaPaasam.unavagam.dto.PageResponse;
 import com.ammaPaasam.unavagam.entity.FoodPost;
+import com.ammaPaasam.unavagam.exception.ApiException;
 import com.ammaPaasam.unavagam.repository.FoodPostRepository;
 import com.ammaPaasam.unavagam.service.FoodPostService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,7 +86,7 @@ public class FoodPostServiceImpl implements FoodPostService {
     public FoodPostResponse editFoodPost(FoodPostRequest foodPostRequest) throws Exception {
 
         if (foodPostRequest.getId() == null) {
-            throw new Exception("Id cannot be empty while updating.");
+            throw new ApiException("Id cannot be empty while updating user.", HttpStatus.BAD_GATEWAY);
         }
         Optional<FoodPost> foodPost = foodPostRepository.findById(foodPostRequest.getId());
         if (foodPost.isPresent()) {
@@ -102,7 +104,7 @@ public class FoodPostServiceImpl implements FoodPostService {
             return mapFullResponse(result);
 
         }else{
-            throw new Exception("No food post found for that id.");
+            throw new ApiException("No food post found for this id.", HttpStatus.BAD_GATEWAY);
         }
     }
 
@@ -121,7 +123,7 @@ public class FoodPostServiceImpl implements FoodPostService {
                 cloudinaryService.deleteImage(imageUrlKey);
             }
         } else {
-            throw new Exception("No food post found for that id.");
+            throw new ApiException("No food post found for this id.", HttpStatus.BAD_GATEWAY);
         }
     }
 
@@ -149,9 +151,8 @@ public class FoodPostServiceImpl implements FoodPostService {
 
     private String saveImageToFolder(MultipartFile image) throws Exception {
 
-        if (image == null || image.isEmpty()) {
-            throw new Exception("Image cannot be empty");
-        }
+        if (image != null && !image.isEmpty()) {
+
 //        try {
 //            Files.createDirectories(Paths.get(upload_dir));
 //            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
@@ -159,13 +160,17 @@ public class FoodPostServiceImpl implements FoodPostService {
 //            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 //            return "/uploads/" + fileName;
 //        } catch (Exception e) {
+//
 //            throw new Exception("Failed to store image files");
 //        }
 
-        try{
-           return cloudinaryService.uploadImage(image);
-        }catch(Exception e){
-              throw new Exception("Failed during image upload to cloudinary");
+            try {
+                return cloudinaryService.uploadImage(image);
+            } catch (Exception e) {
+                throw new ApiException("Failed during image upload to cloudinary.", HttpStatus.BAD_GATEWAY);
+            }
         }
+        return null;
+
     }
 }
