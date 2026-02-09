@@ -30,8 +30,9 @@ public class FoodPostController {
 
     @PostMapping("/getFoodPostList")
     public PageResponse<FoodPostResponse> getAllFoodResponse(@RequestParam(defaultValue = "0") int page,
-                                                             @RequestParam(defaultValue = "10") int size){
-        return foodPostService.getAllFoodPost(page,size);
+                                                             @RequestParam(defaultValue = "10") int size,
+                                                             @RequestParam(required = false) UUID orphanageId){
+        return foodPostService.getAllFoodPost(page,size,orphanageId);
 
     }
 

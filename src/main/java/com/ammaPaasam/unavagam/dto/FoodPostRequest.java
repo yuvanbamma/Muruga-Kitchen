@@ -3,8 +3,8 @@ package com.ammaPaasam.unavagam.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.message.Message;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -21,4 +21,16 @@ public class FoodPostRequest {
     private Integer quantity;
 
     private UUID id;
+
+    @NotNull(message = "orphnage id cannot be null")
+    private UUID orphaneId;
+
+    private String requirement;
+
+    private Long quantityRequired;
+
+    private Long collectedQuantity;
+
+    private Instant expireTime;
+
 }

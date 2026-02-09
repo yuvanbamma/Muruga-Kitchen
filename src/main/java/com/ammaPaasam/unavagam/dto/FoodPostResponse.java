@@ -17,8 +17,6 @@ public class FoodPostResponse {
 
     private String description;
 
-    private Integer quantity;
-
     private String imageUrl;
 
     private Instant createdAt;
@@ -28,5 +26,15 @@ public class FoodPostResponse {
     private boolean isActive;
 
     private boolean isDeleted;
+
+    private UUID orphaneId;
+
+    private String requirement;
+
+    private Long quantityRequired;
+
+    private Long collectedQuantity;
+
+    private Instant expireTime;
 
 }

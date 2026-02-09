@@ -1,0 +1,57 @@
+package com.ammaPaasam.unavagam.service.impl;
+
+import com.ammaPaasam.unavagam.dto.OrphanageRequest;
+import com.ammaPaasam.unavagam.dto.OrphanageResponse;
+import com.ammaPaasam.unavagam.entity.Orphanage;
+import com.ammaPaasam.unavagam.exception.ApiException;
+import com.ammaPaasam.unavagam.repository.OrphanageRepository;
+import com.ammaPaasam.unavagam.service.OrphanageService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class OrphanageServiceImpl implements OrphanageService {
+
+    private final OrphanageRepository orphanageRepository;
+
+    @Override
+    public ResponseEntity<OrphanageResponse> createOrphanage(OrphanageRequest orphanageRequest) {
+          UUID orphanageId = orphanageRequest.getId();
+        Orphanage orphanage;
+        if(orphanageId !=null){
+             orphanage = orphanageRepository.findById(orphanageId).orElseThrow(()
+                     -> new ApiException("No orphanage found for this id.", HttpStatus.NOT_FOUND));
+        }else {
+           orphanage = new Orphanage();
+        }
+        this.mapOrphanage(orphanage,orphanageRequest);
+        orphanageRepository.save(orphanage);
+        OrphanageResponse orphanageResponse = new OrphanageResponse();
+        orphanageResponse.setId(orphanage.getId());
+        orphanageResponse.setMessage("Orphanage successfully created");
+        return ResponseEntity.ok(orphanageResponse);
+    }
+
+    private void mapOrphanage(Orphanage orphanage,OrphanageRequest orphanageRequest) {
+        orphanage.setBio(orphanageRequest.getBio());
+        orphanage.setEmail(orphanageRequest.getEmail());
+        orphanage.setLandmark(orphanageRequest.getLandmark());
+        orphanage.setLatitude(orphanageRequest.getLatitude());
+        orphanage.setLongitude(orphanageRequest.getLongitude());
+        orphanage.setVerified(orphanageRequest.isVerified());
+        orphanage.setFullAddress(orphanageRequest.getFullAddress());
+        orphanage.setOfficialName(orphanageRequest.getOfficialName());
+        orphanage.setVisitPolicy(orphanageRequest.getVisitPolicy());
+        orphanage.setTotalChilders(orphanageRequest.getTotalChilders());
+        orphanage.setWebsiteUrl(orphanageRequest.getWebsiteUrl());
+        orphanage.setRegisteredNumber(orphanageRequest.getRegisteredNumber());
+        orphanage.setContactPersonContact(orphanageRequest.getContactPersonContact());
+
+    }
+}

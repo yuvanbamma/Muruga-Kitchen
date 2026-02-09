@@ -41,6 +41,6 @@ public class AuthController {
 
     @PostMapping("/registry/food-delivery-boy")
     public ResponseEntity<UserSignUpResponse> registerFoodDeliveryBoy(@RequestBody UserSignUpRequest userSignUpRequest){
-        return authService.registerUser(userSignUpRequest, Roles.FOOD_DELIVERY_BOY);
+        return authService.registerUser(userSignUpRequest, Roles.ORPHANAGE);
     }
 }

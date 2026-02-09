@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -14,13 +17,23 @@ public class FoodPost extends Audit {
     @Column(nullable = false)
     private String name;
 
+    private UUID orphaneId;
+
     @Column(length = 500)
     private String description;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column
+    private String requirement;
 
-    @Column(nullable = false)
-    private Integer quantity;
+    @Column
+    private Long quantityRequired;
+
+    @Column
+    private Long collectedQuantity;
+
+    private Instant expireTime;
+
+    @Column
+    private String imageUrl;
 
 }

@@ -13,4 +13,5 @@ public interface FoodPostRepository extends JpaRepository<FoodPost, UUID> {
 
     Optional<FoodPost> findByIdAndIsDeletedFalse(UUID id);
 
+    Page<FoodPost> findByIsDeletedFalseAndOrphaneId(UUID orphanageId, Pageable pageable);
 }

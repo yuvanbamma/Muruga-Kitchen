@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface FoodPostService {
     FoodPostResponse createFoodPost(@Valid FoodPostRequest foodPostRequest, MultipartFile image) throws Exception;
 
-    PageResponse<FoodPostResponse> getAllFoodPost(int page, int size);
+    PageResponse<FoodPostResponse> getAllFoodPost(int page, int size, UUID orphanageId);
 
     FoodPostResponse getFoodPostById(UUID id);
 

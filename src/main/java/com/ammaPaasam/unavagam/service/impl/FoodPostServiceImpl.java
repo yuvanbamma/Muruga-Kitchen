@@ -42,23 +42,35 @@ public class FoodPostServiceImpl implements FoodPostService {
         FoodPost foodPost = new FoodPost();
         foodPost.setName(foodPostRequest.getName());
         foodPost.setDescription(foodPostRequest.getDescription());
-        foodPost.setQuantity(foodPostRequest.getQuantity());
+        foodPost.setQuantityRequired(foodPostRequest.getQuantityRequired());
+        foodPost.setExpireTime(foodPostRequest.getExpireTime());
+        foodPost.setCollectedQuantity(foodPostRequest.getCollectedQuantity());
+        foodPost.setOrphaneId(foodPostRequest.getOrphaneId());
         foodPost.setImageUrl(imageUrl);
         FoodPost savedEntity = foodPostRepository.save(foodPost);
         return mapToResponse(savedEntity);
     }
 
     @Override
-    public PageResponse<FoodPostResponse> getAllFoodPost(int page, int size) {
+    public PageResponse<FoodPostResponse> getAllFoodPost(int page, int size, UUID orphanageId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
-        Page<FoodPost> paginatedResponseFromDb = foodPostRepository.findByIsDeletedFalse(pageable);
+        Page<FoodPost> paginatedResponseFromDb;
+        if (orphanageId != null) {
+            paginatedResponseFromDb = foodPostRepository.findByIsDeletedFalseAndOrphaneId(orphanageId, pageable);
+        } else {
+            paginatedResponseFromDb = foodPostRepository.findByIsDeletedFalse(pageable);
+
+        }
         List<FoodPostResponse> content = new ArrayList<>();
         for (FoodPost food : paginatedResponseFromDb) {
             FoodPostResponse foodPost = new FoodPostResponse();
             foodPost.setName(food.getName());
-            foodPost.setQuantity(food.getQuantity());
-            foodPost.setDescription(food.getDescription());
+            foodPost.setCollectedQuantity(food.getCollectedQuantity());
+            foodPost.setQuantityRequired(food.getQuantityRequired());
+            foodPost.setExpireTime(food.getExpireTime());
+            foodPost.setRequirement(food.getRequirement());
             foodPost.setImageUrl(food.getImageUrl());
+            foodPost.setOrphaneId(food.getOrphaneId());
             foodPost.setId(food.getId());
             content.add(foodPost);
         }
@@ -97,9 +109,16 @@ public class FoodPostServiceImpl implements FoodPostService {
             if (foodPostRequest.getDescription() != null) {
                 foodPost1.setDescription(foodPostRequest.getDescription());
             }
-            if (foodPostRequest.getQuantity() != null) {
-                foodPost1.setQuantity(foodPostRequest.getQuantity());
+            if (foodPostRequest.getCollectedQuantity() != null) {
+                foodPost1.setCollectedQuantity(foodPostRequest.getCollectedQuantity());
             }
+            if (foodPostRequest.getExpireTime() != null) {
+                foodPost1.setExpireTime(foodPostRequest.getExpireTime());
+            }
+            if (foodPostRequest.getRequirement() != null) {
+                foodPost1.setRequirement(foodPostRequest.getRequirement());
+            }
+
             FoodPost result = foodPostRepository.save(foodPost1);
             return mapFullResponse(result);
 
@@ -131,7 +150,11 @@ public class FoodPostServiceImpl implements FoodPostService {
     private FoodPostResponse mapToResponse(FoodPost foodPost) {
         FoodPostResponse foodPostResponse = new FoodPostResponse();
         foodPostResponse.setName(foodPost.getName());
-        foodPostResponse.setQuantity(foodPost.getQuantity());
+        foodPostResponse.setQuantityRequired(foodPost.getQuantityRequired());
+        foodPostResponse.setRequirement(foodPost.getRequirement());
+        foodPostResponse.setOrphaneId(foodPost.getOrphaneId());
+        foodPostResponse.setCollectedQuantity(foodPost.getCollectedQuantity());
+        foodPostResponse.setExpireTime(foodPost.getExpireTime());
         foodPostResponse.setDescription(foodPost.getDescription());
         return foodPostResponse;
     }
@@ -139,7 +162,11 @@ public class FoodPostServiceImpl implements FoodPostService {
     private FoodPostResponse mapFullResponse(FoodPost foodPost) {
         FoodPostResponse foodPostResponse = new FoodPostResponse();
         foodPostResponse.setName(foodPost.getName());
-        foodPostResponse.setQuantity(foodPost.getQuantity());
+        foodPostResponse.setQuantityRequired(foodPost.getQuantityRequired());
+        foodPostResponse.setRequirement(foodPost.getRequirement());
+        foodPostResponse.setOrphaneId(foodPost.getOrphaneId());
+        foodPostResponse.setCollectedQuantity(foodPost.getCollectedQuantity());
+        foodPostResponse.setExpireTime(foodPost.getExpireTime());
         foodPostResponse.setDescription(foodPost.getDescription());
         foodPostResponse.setImageUrl(foodPost.getImageUrl());
         foodPostResponse.setUpdatedAt(foodPost.getUpdatedAt());
