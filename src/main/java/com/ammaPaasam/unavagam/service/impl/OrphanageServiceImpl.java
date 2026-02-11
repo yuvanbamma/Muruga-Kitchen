@@ -2,6 +2,7 @@ package com.ammaPaasam.unavagam.service.impl;
 
 import com.ammaPaasam.unavagam.dto.OrphanageRequest;
 import com.ammaPaasam.unavagam.dto.OrphanageResponse;
+import com.ammaPaasam.unavagam.dto.UserSignUpRequest;
 import com.ammaPaasam.unavagam.entity.Orphanage;
 import com.ammaPaasam.unavagam.exception.ApiException;
 import com.ammaPaasam.unavagam.repository.OrphanageRepository;
@@ -21,8 +22,8 @@ public class OrphanageServiceImpl implements OrphanageService {
     private final OrphanageRepository orphanageRepository;
 
     @Override
-    public ResponseEntity<OrphanageResponse> createOrphanage(OrphanageRequest orphanageRequest) {
-          UUID orphanageId = orphanageRequest.getId();
+    public ResponseEntity<OrphanageResponse> createOrphanage(UserSignUpRequest userSignUpRequest) {
+          UUID orphanageId = userSignUpRequest.getId();
         Orphanage orphanage;
         if(orphanageId !=null){
              orphanage = orphanageRepository.findById(orphanageId).orElseThrow(()
@@ -30,7 +31,7 @@ public class OrphanageServiceImpl implements OrphanageService {
         }else {
            orphanage = new Orphanage();
         }
-        this.mapOrphanage(orphanage,orphanageRequest);
+        this.mapOrphanage(orphanage,userSignUpRequest);
         orphanageRepository.save(orphanage);
         OrphanageResponse orphanageResponse = new OrphanageResponse();
         orphanageResponse.setId(orphanage.getId());
@@ -38,7 +39,7 @@ public class OrphanageServiceImpl implements OrphanageService {
         return ResponseEntity.ok(orphanageResponse);
     }
 
-    private void mapOrphanage(Orphanage orphanage,OrphanageRequest orphanageRequest) {
+    private void mapOrphanage(Orphanage orphanage,UserSignUpRequest orphanageRequest) {
         orphanage.setBio(orphanageRequest.getBio());
         orphanage.setEmail(orphanageRequest.getEmail());
         orphanage.setLandmark(orphanageRequest.getLandmark());
@@ -52,6 +53,7 @@ public class OrphanageServiceImpl implements OrphanageService {
         orphanage.setWebsiteUrl(orphanageRequest.getWebsiteUrl());
         orphanage.setRegisteredNumber(orphanageRequest.getRegisteredNumber());
         orphanage.setContactPersonContact(orphanageRequest.getContactPersonContact());
+        orphanage.setUserId(orphanageRequest.getUserId());
 
     }
 }

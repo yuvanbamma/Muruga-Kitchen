@@ -6,11 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity
 public class Orphanage extends Audit {
 
+
+    private UUID userId;
 
     private String officialName;
 

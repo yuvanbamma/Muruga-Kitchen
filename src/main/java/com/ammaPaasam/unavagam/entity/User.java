@@ -31,6 +31,5 @@ public class User extends Audit {
 
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
-    private Roles role; // role reference
+    private UUID role; // role reference
 }

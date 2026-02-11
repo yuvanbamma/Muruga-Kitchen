@@ -21,7 +21,7 @@ public class FoodPostController {
 
     private final FoodPostService foodPostService;
 
-    @PreAuthorize("hasRole('FOOD_DONATOR')")
+//    @PreAuthorize("hasRole('FOOD_DONATOR')")
     @PostMapping
     public FoodPostResponse createFoodPost(@RequestPart("data") @Valid FoodPostRequest foodPostRequest,
                                            @RequestPart(value = "file", required = false) MultipartFile image) throws Exception {

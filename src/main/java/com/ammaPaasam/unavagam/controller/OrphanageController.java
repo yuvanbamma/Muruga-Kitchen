@@ -20,8 +20,8 @@ public class OrphanageController {
 
     private final OrphanageService orphanageService;
 
-    @PostMapping
-    public ResponseEntity<OrphanageResponse> createOrphanage( @Valid @RequestBody OrphanageRequest orphanageRequest){
-        return orphanageService.createOrphanage(orphanageRequest);
-    }
+//    @PostMapping
+//    public ResponseEntity<OrphanageResponse> createOrphanage( @Valid @RequestBody OrphanageRequest orphanageRequest){
+//        return orphanageService.createOrphanage(orphanageRequest);
+//    }
 }

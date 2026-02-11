@@ -7,5 +7,5 @@ import com.ammaPaasam.unavagam.enums.Roles;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
-    ResponseEntity<UserSignUpResponse> registerUser(UserSignUpRequest userSignUpRequest, Roles roles);
+    ResponseEntity<UserSignUpResponse> registerUser(UserSignUpRequest userSignUpRequest, String role);
 }
