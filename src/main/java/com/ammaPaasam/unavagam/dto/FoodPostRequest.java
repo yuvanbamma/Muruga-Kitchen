@@ -25,6 +25,9 @@ public class FoodPostRequest {
     @NotNull(message = "orphnage id cannot be null")
     private UUID orphaneId;
 
+    @NotNull(message = "user id cannot be empty")
+    private UUID userId;
+
     private String requirement;
 
     private Long quantityRequired;

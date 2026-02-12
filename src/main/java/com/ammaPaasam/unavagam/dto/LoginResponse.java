@@ -14,4 +14,8 @@ public class LoginResponse {
     private String token;
 
     private String roleName;
+
+    private UUID orphanageId;
+
+    private UUID userId;
 }

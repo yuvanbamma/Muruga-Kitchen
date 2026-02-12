@@ -7,10 +7,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/orphanage")
@@ -24,4 +23,9 @@ public class OrphanageController {
 //    public ResponseEntity<OrphanageResponse> createOrphanage( @Valid @RequestBody OrphanageRequest orphanageRequest){
 //        return orphanageService.createOrphanage(orphanageRequest);
 //    }
+
+    @GetMapping
+    public ResponseEntity<OrphanageResponse> listByOrphanageId(UUID orphanageId){
+        return orphanageService.list(orphanageId);
+    }
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Orphanage extends Audit {
 
 
-    private UUID userId;
+    private UUID userIdentity;
 
     private String officialName;
 

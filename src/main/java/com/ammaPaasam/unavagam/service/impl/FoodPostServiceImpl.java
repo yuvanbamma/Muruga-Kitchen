@@ -46,6 +46,7 @@ public class FoodPostServiceImpl implements FoodPostService {
         foodPost.setExpireTime(foodPostRequest.getExpireTime());
         foodPost.setCollectedQuantity(foodPostRequest.getCollectedQuantity());
         foodPost.setOrphaneId(foodPostRequest.getOrphaneId());
+        foodPost.setUserId(foodPostRequest.getUserId());
         foodPost.setImageUrl(imageUrl);
         FoodPost savedEntity = foodPostRepository.save(foodPost);
         return mapToResponse(savedEntity);
@@ -122,7 +123,7 @@ public class FoodPostServiceImpl implements FoodPostService {
             FoodPost result = foodPostRepository.save(foodPost1);
             return mapFullResponse(result);
 
-        }else{
+        } else {
             throw new ApiException("No food post found for this id.", HttpStatus.BAD_GATEWAY);
         }
     }
@@ -145,7 +146,6 @@ public class FoodPostServiceImpl implements FoodPostService {
             throw new ApiException("No food post found for this id.", HttpStatus.BAD_GATEWAY);
         }
     }
-
 
     private FoodPostResponse mapToResponse(FoodPost foodPost) {
         FoodPostResponse foodPostResponse = new FoodPostResponse();
@@ -180,16 +180,17 @@ public class FoodPostServiceImpl implements FoodPostService {
 
         if (image != null && !image.isEmpty()) {
 
-//        try {
-//            Files.createDirectories(Paths.get(upload_dir));
-//            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-//            Path filePath = Paths.get(upload_dir, fileName);
-//            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-//            return "/uploads/" + fileName;
-//        } catch (Exception e) {
-//
-//            throw new Exception("Failed to store image files");
-//        }
+            // try {
+            // Files.createDirectories(Paths.get(upload_dir));
+            // String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+            // Path filePath = Paths.get(upload_dir, fileName);
+            // Files.copy(image.getInputStream(), filePath,
+            // StandardCopyOption.REPLACE_EXISTING);
+            // return "/uploads/" + fileName;
+            // } catch (Exception e) {
+            //
+            // throw new Exception("Failed to store image files");
+            // }
 
             try {
                 return cloudinaryService.uploadImage(image);

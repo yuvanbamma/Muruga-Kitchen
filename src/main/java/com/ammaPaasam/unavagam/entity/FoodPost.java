@@ -19,6 +19,8 @@ public class FoodPost extends Audit {
 
     private UUID orphaneId;
 
+    private UUID userId;
+
     @Column(length = 500)
     private String description;
 

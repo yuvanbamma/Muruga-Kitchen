@@ -1,6 +1,5 @@
 package com.ammaPaasam.unavagam.dto;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

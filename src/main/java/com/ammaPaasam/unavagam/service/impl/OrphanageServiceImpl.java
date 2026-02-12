@@ -8,9 +8,11 @@ import com.ammaPaasam.unavagam.exception.ApiException;
 import com.ammaPaasam.unavagam.repository.OrphanageRepository;
 import com.ammaPaasam.unavagam.service.OrphanageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.util.BeanUtil;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +41,15 @@ public class OrphanageServiceImpl implements OrphanageService {
         return ResponseEntity.ok(orphanageResponse);
     }
 
+    @Override
+    public ResponseEntity<OrphanageResponse> list(UUID orphanageId) {
+
+        Orphanage orphanage = orphanageRepository.findById(orphanageId).orElseThrow(() -> new ApiException("No orphanage found for this id.",HttpStatus.NOT_FOUND));
+        OrphanageResponse response = new OrphanageResponse();
+        BeanUtils.copyProperties(orphanage,response);
+        return ResponseEntity.ok(response);
+    }
+
     private void mapOrphanage(Orphanage orphanage,UserSignUpRequest orphanageRequest) {
         orphanage.setBio(orphanageRequest.getBio());
         orphanage.setEmail(orphanageRequest.getEmail());
@@ -53,7 +64,7 @@ public class OrphanageServiceImpl implements OrphanageService {
         orphanage.setWebsiteUrl(orphanageRequest.getWebsiteUrl());
         orphanage.setRegisteredNumber(orphanageRequest.getRegisteredNumber());
         orphanage.setContactPersonContact(orphanageRequest.getContactPersonContact());
-        orphanage.setUserId(orphanageRequest.getUserId());
+        orphanage.setUserIdentity(orphanageRequest.getUserId());
 
     }
 }
