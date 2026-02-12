@@ -1,12 +1,17 @@
 package com.ammaPaasam.unavagam.service.impl;
 
 import com.ammaPaasam.unavagam.commonservice.CloudinaryService;
+import com.ammaPaasam.unavagam.commonservice.SecurityUItil;
 import com.ammaPaasam.unavagam.dto.FoodPostRequest;
 import com.ammaPaasam.unavagam.dto.FoodPostResponse;
 import com.ammaPaasam.unavagam.dto.PageResponse;
 import com.ammaPaasam.unavagam.entity.FoodPost;
+import com.ammaPaasam.unavagam.entity.Orphanage;
+import com.ammaPaasam.unavagam.entity.User;
 import com.ammaPaasam.unavagam.exception.ApiException;
 import com.ammaPaasam.unavagam.repository.FoodPostRepository;
+import com.ammaPaasam.unavagam.repository.OrphanageRepository;
+import com.ammaPaasam.unavagam.repository.UserRepository;
 import com.ammaPaasam.unavagam.service.FoodPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +31,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.lang.Math.sqrt;
+
 @Service
 @RequiredArgsConstructor
 public class FoodPostServiceImpl implements FoodPostService {
@@ -35,6 +42,10 @@ public class FoodPostServiceImpl implements FoodPostService {
     private static final String upload_dir = "uploads";
 
     private final CloudinaryService cloudinaryService;
+
+    private final UserRepository userRepository;
+
+    private final OrphanageRepository orphanageRepository;
 
     @Override
     public FoodPostResponse createFoodPost(FoodPostRequest foodPostRequest, MultipartFile image) throws Exception {
@@ -54,6 +65,15 @@ public class FoodPostServiceImpl implements FoodPostService {
 
     @Override
     public PageResponse<FoodPostResponse> getAllFoodPost(int page, int size, UUID orphanageId) {
+        Double latitude = null;
+        Double longitude =null;
+        Optional<UUID> optionalUserId = SecurityUItil.getLogedInUserId();
+        if(optionalUserId.isPresent()){
+            User user = userRepository.findById(optionalUserId.get()).orElseThrow(() -> new ApiException("User not found with this id",HttpStatus.NOT_FOUND));
+            latitude = user.getLatitude();
+             longitude = user.getLongitude();
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         Page<FoodPost> paginatedResponseFromDb;
         if (orphanageId != null) {
@@ -73,6 +93,12 @@ public class FoodPostServiceImpl implements FoodPostService {
             foodPost.setImageUrl(food.getImageUrl());
             foodPost.setOrphaneId(food.getOrphaneId());
             foodPost.setId(food.getId());
+            Optional<Orphanage> orphanage = orphanageRepository.findById(food.getOrphaneId());
+            if(orphanage.isPresent() && latitude !=null && longitude !=null){
+                Orphanage orphanage1 = orphanage.get();
+                double distanceInKM =  this.calcultedDistance(latitude,longitude,orphanage1.getLatitude(),orphanage1.getLongitude());
+                foodPost.setDistance(distanceInKM);
+            }
             content.add(foodPost);
         }
 
@@ -83,6 +109,23 @@ public class FoodPostServiceImpl implements FoodPostService {
         pageResponse.setSize(paginatedResponseFromDb.getSize());
         pageResponse.setTotalElements(paginatedResponseFromDb.getTotalElements());
         return pageResponse;
+    }
+
+    private double calcultedDistance(Double latitude, Double longitude, Double latitude1, Double longitude1) {
+
+        final int FINAL_EARTH_RADIUS_IN_KM = 6371;
+
+        double latitudeSum = Math.toRadians(latitude - latitude1);
+        double longitudeSum  = Math.toRadians(longitude - longitude1);
+
+        double a = Math.sin(latitudeSum /2) * Math.sin(latitudeSum/2)
+                + Math.cos(Math.toRadians(latitude))
+                * Math.cos(Math.toRadians(latitude1))
+                *Math.sin(longitudeSum/2) * Math.sin(longitudeSum /2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 -a));
+         return FINAL_EARTH_RADIUS_IN_KM * c;
+
     }
 
     @Override

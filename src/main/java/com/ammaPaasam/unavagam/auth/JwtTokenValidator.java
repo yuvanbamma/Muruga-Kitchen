@@ -15,7 +15,7 @@ public class JwtTokenValidator {
     private String secretKey;
 
     public String extractEmail(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody().get("email", String.class);
 
     }
 
@@ -39,4 +39,7 @@ public class JwtTokenValidator {
     }
 
 
+    public String getUserId(String token) {
+        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody().getSubject();
+    }
 }

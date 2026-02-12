@@ -17,7 +17,7 @@ public class jwtConfig {
 
 
     public String generateToken(User user){
-        return  Jwts.builder().setSubject(user.getEmail()).claim("role",user.getRole()).setIssuedAt(new Date())
+        return  Jwts.builder().setSubject(user.getId().toString()).claim("role",user.getRole()).claim("email",user.getEmail()).setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)).signWith(Keys.hmacShaKeyFor(secretKey.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }

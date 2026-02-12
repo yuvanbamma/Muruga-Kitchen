@@ -36,4 +36,6 @@ public class FoodPostResponse {
 
     private Instant expireTime;
 
+    private Double distance; //distance in km
+
 }
