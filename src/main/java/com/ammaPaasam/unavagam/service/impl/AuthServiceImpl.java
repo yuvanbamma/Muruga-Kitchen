@@ -47,6 +47,8 @@ public class AuthServiceImpl implements AuthService {
         user.setCountry(userSignUpRequest.getCountry());
         user.setCountryCode(userSignUpRequest.getCountryCode());
         user.setPhoneNumber(userSignUpRequest.getPhoneNumber());
+        user.setCityId(userSignUpRequest.getCityId());
+        user.setStateId(userSignUpRequest.getStateId());
         User userPersistent = userRepository.save(user);
 
         if (role.equals("ORPHANAGE")) {

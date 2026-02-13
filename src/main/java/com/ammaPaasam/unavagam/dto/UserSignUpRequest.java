@@ -51,4 +51,8 @@ public class UserSignUpRequest {
 
     private UUID userId;
 
+    private UUID stateId;
+
+    private UUID cityId;
+
 }

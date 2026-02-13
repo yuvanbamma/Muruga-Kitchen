@@ -32,6 +32,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/food-posts/getFoodPostList").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/food-posts/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/cities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/states").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

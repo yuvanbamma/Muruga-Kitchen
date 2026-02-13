@@ -32,4 +32,8 @@ public class User extends Audit {
     private String phoneNumber;
 
     private UUID role; // role reference
+
+    private UUID stateId;
+
+    private UUID cityId;
 }
